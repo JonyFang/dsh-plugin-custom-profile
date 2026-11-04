@@ -45,7 +45,7 @@ PNG, JPG, WebP, GIF, or AVIF, up to 10 MB. Cropped to a square and stored as 128
 - Signed out, the row is left alone. A collapsed sidebar gets the avatar only.
 - The custom row follows this device, not the account. Clearing site data or changing devices removes it.
 - Do not run another plugin that paints the same row. This one will not import that plugin's saved values.
-- Written against client `0.2.1-rc.5`. If the account-row markup changes, the plugin stops painting instead of breaking the page.
+- Written against client `0.2.2-rc.1`. If the account-row markup changes, the plugin stops painting instead of breaking the page.
 
 ## Development
 
