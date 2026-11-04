@@ -12,6 +12,8 @@ permissions:
 jobs:
   watch:
     runs-on: ubuntu-latest
+    env:
+      COPILOT_ASSIGN_TOKEN: ${{ secrets.COPILOT_ASSIGN_TOKEN }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -55,7 +57,7 @@ jobs:
           echo "number=${url##*/}" >> "$GITHUB_OUTPUT"
 
       - name: Assign the dsh-compat agent
-        if: steps.issue.outputs.number != '' && secrets.COPILOT_ASSIGN_TOKEN != ''
+        if: steps.issue.outputs.number != '' && env.COPILOT_ASSIGN_TOKEN != ''
         env:
           GH_TOKEN: ${{ secrets.COPILOT_ASSIGN_TOKEN }}
           ISSUE: ${{ steps.issue.outputs.number }}
@@ -71,7 +73,7 @@ jobs:
                 --input -
 
       - name: Ask for the agent when it cannot be assigned
-        if: steps.issue.outputs.number != '' && secrets.COPILOT_ASSIGN_TOKEN == ''
+        if: steps.issue.outputs.number != '' && env.COPILOT_ASSIGN_TOKEN == ''
         env:
           GH_TOKEN: ${{ github.token }}
           ISSUE: ${{ steps.issue.outputs.number }}
