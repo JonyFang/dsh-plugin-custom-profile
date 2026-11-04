@@ -1,6 +1,6 @@
 {
   "name": "dsh-plugin-custom-profile",
-  "version": "0.1.0",
+  "version": "0.2.1-rc.5",
   "description": "Replace the DSH sidebar account name and avatar with local, per-device values.",
   "title": {
     "en": "Custom Profile",
@@ -16,6 +16,15 @@
     "display-name"
   ],
   "license": "MIT",
+  "author": "JonyFang",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JonyFang/dsh-plugin-custom-profile.git"
+  },
+  "homepage": "https://github.com/JonyFang/dsh-plugin-custom-profile#readme",
+  "bugs": {
+    "url": "https://github.com/JonyFang/dsh-plugin-custom-profile/issues"
+  },
   "type": "module",
   "main": "./lib/index.js",
   "icon": "icon.svg",
@@ -58,6 +67,7 @@
     "react-dom": "^18.3.1"
   },
   "engines": {
-    "node": "^22.19.0 || >=24.0.0"
+    "node": "^22.19.0 || >=24.0.0",
+    "dsh": ">=0.2.1-rc.5"
   }
 }
