@@ -29,7 +29,7 @@ Two halves, and only the browser half does anything:
 
 One `localStorage` record, `{ v: 1, name, avatar }`, written atomically. A `storage` event keeps other frames in sync. An empty name and empty avatar removes the record. Do not rename or print `STORAGE_KEY`; changing it orphans saved names and avatars, and the harness reads the literal from source. `LEGACY_ALIAS_KEY` and `LEGACY_AVATAR_KEY` are a read-only presence check that shows a warning. Never write or import those values.
 
-The account launcher (`@deepseek-ai/dsh-client-ui-settings-account`) has no extension slot. The adapter finds `button[aria-haspopup="menu"][data-signed-out]`, with a `data-collapsed` fallback, and only paints when signed in (`data-signed-out="false"`). It writes the existing label text node and sets the avatar's `background-image`. It does not remove React nodes. A collapsed rail gets the avatar only. Markers are `data-dsh-plugin-custom-profile-label|avatar|style`. Settings CSS classes stay `dsh-pp-*`. If the markup does not match (written against client `0.2.1-rc.5`), painting stops; it must not throw. Dispose restores the shipped name and avatar, including the case where the account name equals the custom name (`labelShipped` comes from the mutation record, not a text compare).
+The account launcher (`@deepseek-ai/dsh-client-ui-settings-account`) has no extension slot. The adapter finds `button[aria-haspopup="menu"][data-signed-out]`, with a `data-collapsed` fallback, and only paints when signed in (`data-signed-out="false"`). It writes the existing label text node and sets the avatar's `background-image`. It does not remove React nodes. A collapsed rail gets the avatar only. Markers are `data-dsh-plugin-custom-profile-label|avatar|style`. Settings CSS classes stay `dsh-pp-*`. If the markup does not match (written against client `0.2.2-rc.1`), painting stops; it must not throw. Dispose restores the shipped name and avatar, including the case where the account name equals the custom name (`labelShipped` comes from the mutation record, not a text compare).
 
 Names are capped at 32 code points. `sanitizeName` strips C0/C1 controls and bidi/zero-width characters, then collapses whitespace. ZWJ (`U+200D`) and ZWNJ (`U+200C`) stay so emoji sequences survive. Avatars: PNG, JPG, WebP, GIF, or AVIF, at most 10 MB and 40 megapixels, center-cropped to 128×128, stored as WebP quality 0.9 or PNG. A GIF is one frame.
 
@@ -42,7 +42,9 @@ Names are capped at 32 code points. `sanitizeName` strips C0/C1 controls and bid
 - `watch-dsh-release` reads https://www.deepseek.com/en/harness/ and the official GitHub releases. It edits nothing.
 - `assess-dsh-compat` checks the new client's account row and `settings.section`. It edits nothing. An incomplete check must not be recorded as verified.
 - `adapt-custom-profile` edits `lib/client.js` only when that check says the markup changed.
-- `bump-dsh-version` then sets `version` and `dshCompat.verified` to the client version, and updates the two README lines. `engines.dsh` stays the minimum that still runs.
+- `bump-dsh-version` then sets `version` and `dshCompat.verified` to the client version, and updates the two README lines plus the "written against client" sentence in this file. `engines.dsh` stays the minimum that still runs.
+
+That record lands only by merging the agent's pull request. Do not push it to the default branch. If a pull request for that client is already open, add the missing record there.
 
 `.github/workflows/watch-dsh.yml` runs the watch script daily. A newer client opens an issue and assigns this agent when the `COPILOT_ASSIGN_TOKEN` secret is set. `GITHUB_TOKEN` cannot assign Copilot.
 

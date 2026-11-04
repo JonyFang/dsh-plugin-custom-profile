@@ -74,10 +74,11 @@ test("the old plugin's keys are only read, never written", () => {
   assert.doesNotMatch(source, /removeItem\(\s*LEGACY_/);
 });
 
-test("the verified client is the version both READMEs name", () => {
+test("the verified client is the version the READMEs and CLAUDE.md name", () => {
   assert.equal(typeof packageJson.dshCompat.verified, "string");
   assert.match(read("README.md"), new RegExp("client `" + packageJson.dshCompat.verified + "`"));
   assert.match(read("README.zh.md"), new RegExp("客户端是 `" + packageJson.dshCompat.verified + "`"));
+  assert.match(read("CLAUDE.md"), new RegExp("written against client `" + packageJson.dshCompat.verified + "`"));
 });
 
 test("the package ships the files its exports name", () => {
