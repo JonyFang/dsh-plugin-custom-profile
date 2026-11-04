@@ -1,0 +1,10 @@
+node_modules/
+*.log
+.DS_Store
+
+# Archify: keep the GIFs and the candidate JSON. Everything else it generates stays out.
+.archify/**
+!.archify/**/
+!.archify/**/candidate.json
+!.archify/**/candidate.en.json
+!.archify/**/*.gif

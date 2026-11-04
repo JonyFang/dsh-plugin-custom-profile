@@ -1,0 +1,7 @@
+# dsh-plugin-custom-profile bundle patch.
+#
+# `name` is the package name resolved through the profile's node_modules;
+# `id` is the stable loader identity used by diagnostics.
+- insert:
+    - id: plugin-custom-profile
+      name: dsh-plugin-custom-profile

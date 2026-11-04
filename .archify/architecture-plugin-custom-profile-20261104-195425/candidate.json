@@ -1,0 +1,153 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "昵称和头像是怎么换上的",
+    "locale": "zh-CN",
+    "output": ".archify/architecture-plugin-custom-profile-20261104-195425/plugin-custom-profile.html",
+    "quality_profile": "showcase"
+  },
+  "components": [
+    {
+      "id": "profile",
+      "type": "external",
+      "label": "桌面 profile",
+      "sublabel": "DSH 客户端",
+      "pos": [40, 210],
+      "size": [156, 72]
+    },
+    {
+      "id": "patch",
+      "type": "backend",
+      "label": "cordis.patch.yml",
+      "sublabel": "把插件插进来",
+      "pos": [30, 36],
+      "size": [176, 72]
+    },
+    {
+      "id": "host",
+      "type": "backend",
+      "label": "lib/index.js",
+      "sublabel": "这里什么都不做",
+      "pos": [278, 36],
+      "size": [156, 72]
+    },
+    {
+      "id": "client",
+      "type": "frontend",
+      "label": "lib/client.js",
+      "sublabel": "一打开就加载",
+      "pos": [296, 210],
+      "size": [168, 72]
+    },
+    {
+      "id": "row",
+      "type": "frontend",
+      "label": "左下角账号行",
+      "sublabel": "原有名称和头像",
+      "pos": [612, 210],
+      "size": [168, 72]
+    },
+    {
+      "id": "store",
+      "type": "database",
+      "label": "localStorage",
+      "sublabel": "昵称和头像",
+      "pos": [292, 400],
+      "size": [176, 72]
+    },
+    {
+      "id": "section",
+      "type": "frontend",
+      "label": "个人资料",
+      "sublabel": "保存前只是草稿",
+      "pos": [560, 400],
+      "size": [176, 72]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "应用这边",
+      "wraps": ["patch", "host"]
+    },
+    {
+      "kind": "region",
+      "label": "页面里",
+      "wraps": ["client", "row", "store", "section"]
+    }
+  ],
+  "connections": [
+    {
+      "id": "load-patch",
+      "from": "profile",
+      "to": "patch",
+      "label": "加载"
+    },
+    {
+      "id": "mount-host",
+      "from": "patch",
+      "to": "host",
+      "label": "挂载"
+    },
+    {
+      "id": "start-client",
+      "from": "profile",
+      "to": "client",
+      "label": "打开就加载",
+      "variant": "emphasis"
+    },
+    {
+      "id": "paint-row",
+      "from": "client",
+      "to": "row",
+      "label": "登录后才画",
+      "variant": "emphasis"
+    },
+    {
+      "id": "register-section",
+      "from": "client",
+      "to": "section",
+      "label": "注册"
+    },
+    {
+      "id": "save-record",
+      "from": "section",
+      "to": "store",
+      "label": "保存"
+    },
+    {
+      "id": "read-record",
+      "from": "client",
+      "to": "store",
+      "label": "读取"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "改的是什么",
+      "items": [
+        "只换左下角的昵称和头像",
+        "账号本身不动",
+        "不会往外发请求"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "保存",
+      "items": [
+        "昵称和头像一起写入",
+        "两个都空着保存时，这条记录会被删掉"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "关掉之后",
+      "items": [
+        "停用或卸载会把原来那一行换回来",
+        "设置里的这一页也会去掉"
+      ]
+    }
+  ]
+}
