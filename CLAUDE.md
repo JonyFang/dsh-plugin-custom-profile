@@ -12,7 +12,7 @@ node --test test/display.test.mjs
 node --test --test-name-pattern "names are normalized" test/display.test.mjs
 ```
 
-`npm test` runs `test/display.test.mjs`, `test/settings.test.mjs`, and `test/package.test.mjs` with the Node test runner. Tests use jsdom and React 18. The harness in `test/harness.mjs` loads `lib/client.js` through `window.__ModuleLoader__` and flushes a stubbed `requestAnimationFrame` with `world.flushFrames`.
+`npm test` runs `test/display.test.mjs`, `test/settings.test.mjs`, `test/package.test.mjs`, and `test/dsh-release.test.mjs` with the Node test runner. Tests use jsdom and React 18. The harness in `test/harness.mjs` loads `lib/client.js` through `window.__ModuleLoader__` and flushes a stubbed `requestAnimationFrame` with `world.flushFrames`.
 
 Install into a DSH profile with `dsh plugin --profile desktop add <absolute-path>`, or symlink this directory into the profile's `node_modules` and append `cordis.patch.yml`. Restart if **Profile** does not appear. Nothing is compiled.
 
@@ -34,6 +34,17 @@ The account launcher (`@deepseek-ai/dsh-client-ui-settings-account`) has no exte
 Names are capped at 32 code points. `sanitizeName` strips C0/C1 controls and bidi/zero-width characters, then collapses whitespace. ZWJ (`U+200D`) and ZWNJ (`U+200C`) stay so emoji sequences survive. Avatars: PNG, JPG, WebP, GIF, or AVIF, at most 10 MB and 40 megapixels, center-cropped to 128×128, stored as WebP quality 0.9 or PNG. A GIF is one frame.
 
 `subscribeLocale` retries for about 2 seconds (120 frames) if the locale service is missing when Profile first mounts. An English id starts with `en`; anything else uses Chinese.
+
+## DSH version checks
+
+`.github/agents/dsh-compat.agent.md` is the GitHub Copilot agent. It does not do the work itself. It loads four skills, in order, and stops when one says to stop:
+
+- `watch-dsh-release` reads https://www.deepseek.com/en/harness/ and the official GitHub releases. It edits nothing.
+- `assess-dsh-compat` checks the new client's account row and `settings.section`. It edits nothing. An incomplete check must not be recorded as verified.
+- `adapt-custom-profile` edits `lib/client.js` only when that check says the markup changed.
+- `bump-dsh-version` then sets `version` and `dshCompat.verified` to the client version, and updates the two README lines. `engines.dsh` stays the minimum that still runs.
+
+`.github/workflows/watch-dsh.yml` runs the watch script daily. A newer client opens an issue and assigns this agent when the `COPILOT_ASSIGN_TOKEN` secret is set. `GITHUB_TOKEN` cannot assign Copilot.
 
 ## What ships
 

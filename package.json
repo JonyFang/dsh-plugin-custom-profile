@@ -50,7 +50,7 @@
     "LICENSE"
   ],
   "scripts": {
-    "test": "node --test test/display.test.mjs test/settings.test.mjs test/package.test.mjs"
+    "test": "node --test test/display.test.mjs test/settings.test.mjs test/package.test.mjs test/dsh-release.test.mjs"
   },
   "dsh": {
     "bundle": {
@@ -69,5 +69,9 @@
   "engines": {
     "node": "^22.19.0 || >=24.0.0",
     "dsh": ">=0.2.1-rc.5"
+  },
+  "dshCompat": {
+    "verified": "0.2.1-rc.5",
+    "page": "https://www.deepseek.com/en/harness/"
   }
 }

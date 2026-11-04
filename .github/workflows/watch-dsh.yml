@@ -1,0 +1,79 @@
+name: Watch DSH
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 3 * * *"
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Read the Harness page
+        id: watch
+        run: |
+          node .github/skills/watch-dsh-release/scripts/latest.mjs | tee "$RUNNER_TEMP/dsh-release.json"
+          echo "changed=$(jq -r .changed "$RUNNER_TEMP/dsh-release.json")" >> "$GITHUB_OUTPUT"
+          echo "latest=$(jq -r .latest "$RUNNER_TEMP/dsh-release.json")" >> "$GITHUB_OUTPUT"
+
+      - name: Open a compat issue
+        id: issue
+        if: steps.watch.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          LATEST: ${{ steps.watch.outputs.latest }}
+        run: |
+          set -euo pipefail
+          gh label create dsh-compat --color 1D76DB --description "DSH client compatibility" 2>/dev/null || true
+          if gh issue list --state open --label dsh-compat --limit 50 --json title --jq '.[].title' | grep -Fxq "Check plugin against DSH $LATEST"; then
+            echo "An open issue already names $LATEST."
+            exit 0
+          fi
+          node --input-type=module -e '
+            import { readFileSync, writeFileSync } from "node:fs";
+            const report = readFileSync(process.env.RUNNER_TEMP + "/dsh-release.json", "utf8").trim();
+            writeFileSync(process.env.RUNNER_TEMP + "/issue.md", [
+              "The Harness watch found a client newer than `dshCompat.verified`.",
+              "",
+              "```json",
+              report,
+              "```",
+              "",
+              "Assign the `dsh-compat` agent. It runs the four skills in order: `watch-dsh-release`, `assess-dsh-compat`, `adapt-custom-profile` only if the account row changed, then `bump-dsh-version` either way. Do not record the version when the assessment cannot find the account row."
+            ].join("\n") + "\n");
+          '
+          url="$(gh issue create --label dsh-compat --title "Check plugin against DSH $LATEST" --body-file "$RUNNER_TEMP/issue.md")"
+          echo "number=${url##*/}" >> "$GITHUB_OUTPUT"
+
+      - name: Assign the dsh-compat agent
+        if: steps.issue.outputs.number != '' && secrets.COPILOT_ASSIGN_TOKEN != ''
+        env:
+          GH_TOKEN: ${{ secrets.COPILOT_ASSIGN_TOKEN }}
+          ISSUE: ${{ steps.issue.outputs.number }}
+        run: |
+          set -euo pipefail
+          jq -n \
+            --arg repo "${{ github.repository }}" \
+            '{assignees:["copilot-swe-agent[bot]"],agent_assignment:{target_repo:$repo,base_branch:"main",custom_agent:"dsh-compat",custom_instructions:"Follow .github/agents/dsh-compat.agent.md. Run the four skills in order. Do not bump the version if the assessment did not finish."}}' \
+            | gh api --method POST \
+                -H "Accept: application/vnd.github+json" \
+                -H "X-GitHub-Api-Version: 2022-11-28" \
+                "/repos/${{ github.repository }}/issues/${ISSUE}/assignees" \
+                --input -
+
+      - name: Ask for the agent when it cannot be assigned
+        if: steps.issue.outputs.number != '' && secrets.COPILOT_ASSIGN_TOKEN == ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE: ${{ steps.issue.outputs.number }}
+        run: |
+          gh issue comment "$ISSUE" --body "Assign the **dsh-compat** agent to this issue. Automatic assignment needs a fine-grained PAT in the \`COPILOT_ASSIGN_TOKEN\` secret with write access to contents, issues, pull requests, and actions. \`GITHUB_TOKEN\` cannot assign Copilot."
