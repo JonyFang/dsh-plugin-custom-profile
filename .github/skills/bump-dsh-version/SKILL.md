@@ -13,9 +13,10 @@ The package version tracks the DSH client it was checked against, not a separate
 - Set `dshCompat.verified` to that same version.
 - In `README.md`, change only the version inside the existing "Written against client" sentence.
 - In `README.zh.md`, change only the version inside the existing "对照的客户端是" sentence.
+- In `CLAUDE.md`, change only the version inside the existing "written against client" sentence. Leave the sentence that names the first release.
 - Leave `engines.dsh` as it is when the plugin still runs on that floor. Raise it to `>=<client>` only when the assessment says the new code no longer runs on the old floor.
 - A plugin-only fix on the same client is `<client>.1`, `<client>.2`, and so on. A newer client replaces that suffix. The version becomes the client version.
 
-Do not rewrite the sentences. Do not put a real signed-in account into either README. Do not push a git tag from the pull request branch. The tag `v` plus `version` is created on the default branch after the pull request merges, because the plugin market will not list a release whose tag does not match `version`.
+Do not rewrite the sentences. Do not put a real signed-in account into either README. Do not push the default branch, and do not push a git tag from the pull request branch. The tag `v` plus `version` is created on the default branch after the pull request merges, because the plugin market will not list a release whose tag does not match `version`. If an open pull request already records this client version, add the missing record to that branch. Do not open a second pull request.
 
-Run `npm test` after the version edits. The package test checks that both READMEs name `dshCompat.verified`.
+Run `npm test` after the version edits. The package test checks that both READMEs and the `CLAUDE.md` sentence name `dshCompat.verified`.
