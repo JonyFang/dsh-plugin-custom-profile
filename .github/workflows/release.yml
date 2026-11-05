@@ -1,0 +1,42 @@
+name: Publish release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Publish the GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          version="${TAG#v}"
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "Release $TAG already exists."
+            exit 0
+          fi
+          prerelease=()
+          if [[ "$version" == *-* ]]; then
+            prerelease=(--prerelease)
+          fi
+          node --input-type=module -e '
+            import { writeFileSync } from "node:fs";
+            const version = process.env.TAG.slice(1);
+            writeFileSync(process.env.RUNNER_TEMP + "/notes.md", [
+              "Plugin version `" + version + "`. The tag was pushed on the default branch after the compatibility pull request merged.",
+              "",
+              "---",
+              "",
+              "插件版本 `" + version + "`。兼容性 pull request 合进默认分支之后，推送了这个 tag。"
+            ].join("\n") + "\n");
+          '
+          gh release create "$TAG" --title "$TAG" --target "$GITHUB_SHA" --notes-file "$RUNNER_TEMP/notes.md" "${prerelease[@]}"
