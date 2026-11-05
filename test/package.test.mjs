@@ -81,6 +81,14 @@ test("the verified client is the version the READMEs and CLAUDE.md name", () => 
   assert.match(read("CLAUDE.md"), new RegExp("written against client `" + packageJson.dshCompat.verified + "`"));
 });
 
+test("a version tag publishes the GitHub release", () => {
+  const workflow = read(".github/workflows/release.yml");
+  assert.match(workflow, /tags:\n\s+- "v\*"/);
+  assert.match(workflow, /contents: write/);
+  assert.match(workflow, /gh release create/);
+  assert.match(workflow, /--prerelease/);
+});
+
 test("the package ships the files its exports name", () => {
   for (const path of [
     "lib/index.js",
