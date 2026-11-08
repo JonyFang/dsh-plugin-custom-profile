@@ -46,7 +46,9 @@ Names are capped at 32 code points. `sanitizeName` strips C0/C1 controls and bid
 
 That record lands only by merging the agent's pull request. Do not push it to the default branch. If a pull request for that client is already open, add the missing record there.
 
-Pushing the tag `v` plus `version` on the default branch publishes the GitHub Release through `.github/workflows/release.yml`. A tag that contains `-` is a prerelease. Do not create that release from the pull request branch.
+Pushing the tag `v` plus `version` on the default branch publishes the GitHub Release and the npm package through `.github/workflows/release.yml`. The job runs the tests, checks the tag against `package.json` `version`, and skips `npm publish` when npm already has that version. It needs the `NPM_TOKEN` secret; without it the publish step fails and no release is created. The plugin market index reads npm, so a tag that skips npm leaves the listing on the old version. A tag that contains `-` is a prerelease. Do not create that release from the pull request branch.
+
+`.github/workflows/ci.yml` runs the tests on every pull request and on pushes to `main`.
 
 `.github/workflows/watch-dsh.yml` runs the watch script daily. A newer client opens an issue and assigns this agent when the `COPILOT_ASSIGN_TOKEN` secret is set. `GITHUB_TOKEN` cannot assign Copilot.
 

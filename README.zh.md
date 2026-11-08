@@ -61,7 +61,7 @@ dsh plugin --profile desktop add /绝对路径/dsh-plugin-custom-profile
 
 ## 开发
 
-Node `^22.19.0 || >=24.0.0`。`npm test`，58 个测试。`lib/index.js` 是空的，浏览器里跑的是 `lib/client.js`。每天有一个 GitHub Action 看[Harness 页面](https://www.deepseek.com/en/harness/)。客户端有新版本，就给 `dsh-compat` agent 开一个 issue。
+Node `^22.19.0 || >=24.0.0`。`npm test`，59 个测试。`lib/index.js` 是空的，浏览器里跑的是 `lib/client.js`。每天有一个 GitHub Action 看[Harness 页面](https://www.deepseek.com/en/harness/)。客户端有新版本，就给 `dsh-compat` agent 开一个 issue。
 
 ## License
 

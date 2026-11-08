@@ -61,7 +61,7 @@ PNG, JPG, WebP, GIF, or AVIF, up to 10 MB. Cropped to a square and stored as 128
 
 ## Development
 
-Node `^22.19.0 || >=24.0.0`. `npm test` runs 58 tests. `lib/index.js` does nothing. `lib/client.js` is the browser bundle. A daily GitHub Action watches the [Harness page](https://www.deepseek.com/en/harness/). A newer client opens an issue for the `dsh-compat` agent.
+Node `^22.19.0 || >=24.0.0`. `npm test` runs 59 tests. `lib/index.js` does nothing. `lib/client.js` is the browser bundle. A daily GitHub Action watches the [Harness page](https://www.deepseek.com/en/harness/). A newer client opens an issue for the `dsh-compat` agent.
 
 ## License
 
