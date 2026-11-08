@@ -1,6 +1,6 @@
 {
   "name": "dsh-plugin-custom-profile",
-  "version": "0.2.2-rc.1",
+  "version": "0.2.2-rc.1.1",
   "description": "Replace the DSH sidebar account name and avatar with local, per-device values.",
   "title": {
     "en": "Custom Profile",
