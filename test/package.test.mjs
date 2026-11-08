@@ -85,10 +85,12 @@ test("a version tag publishes the GitHub release and the npm package", () => {
   const workflow = read(".github/workflows/release.yml");
   assert.match(workflow, /tags:\n\s+- "v\*"/);
   assert.match(workflow, /contents: write/);
+  assert.match(workflow, /id-token: write/);
+  assert.match(workflow, /npm install -g npm@11/);
   assert.match(workflow, /npm test/);
   assert.match(workflow, /does not match package\.json version/);
   assert.match(workflow, /npm publish --tag latest/);
-  assert.match(workflow, /secrets\.NPM_TOKEN/);
+  assert.doesNotMatch(workflow, /NPM_TOKEN/);
   assert.match(workflow, /gh release create/);
   assert.match(workflow, /--prerelease/);
 });
