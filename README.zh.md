@@ -12,17 +12,29 @@
 
 ## 安装
 
-应用里打开 **设置 → 插件 → 安装 → 本地目录**，选这个仓库。包发布之后，也可以直接搜 `dsh-plugin-custom-profile`。
+四种方式，都不用构建，选一种。
 
-或者先退出应用：
+**1. 从 npm 安装。** 包已经发布，名字是 `dsh-plugin-custom-profile`。命令行直接装：
+
+```sh
+dsh plugin --profile desktop add dsh-plugin-custom-profile
+```
+
+应用里的 **设置 → 插件 → 安装** 搜索要等市场索引收录之后才有，按包名直接装现在就能用。
+
+**2. 从 GitHub 安装。** 不经过 npm：
+
+```sh
+dsh plugin --profile desktop add github:JonyFang/dsh-plugin-custom-profile
+```
+
+**3. 本地仓库。** 先 clone 这个仓库，再在应用里打开 **设置 → 插件 → 安装 → 本地目录**，选中它。或者退出应用后：
 
 ```sh
 dsh plugin --profile desktop add /绝对路径/dsh-plugin-custom-profile
 ```
 
-其他 profile 用 `dsh plugin --profile <profile> add dsh-plugin-custom-profile`，或 `github:<your-account>/dsh-plugin-custom-profile`。不用构建。
-
-要自己装，把这个目录软链接到 profile 的 `node_modules`，再在 `cordis.patch.yml` 末尾加上：
+**4. 手动安装。** 把这个目录软链接到 profile 的 `node_modules`，再往它的 `cordis.patch.yml` 追加：
 
 ```yaml
 - insert:
@@ -30,7 +42,7 @@ dsh plugin --profile desktop add /绝对路径/dsh-plugin-custom-profile
       name: dsh-plugin-custom-profile
 ```
 
-设置里没有 **个人资料**，就重启一次。
+`desktop` 是 profile 的名字，换 profile 就改成对应的。设置里没有 **个人资料**，就重启一次。
 
 ## 怎么用
 

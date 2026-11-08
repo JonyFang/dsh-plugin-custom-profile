@@ -12,17 +12,29 @@ Change it at **Settings → Profile**.
 
 ## Install
 
-In the app: **Settings → Plugins → Install → Local directory**, and select this checkout. After the package is published, search for `dsh-plugin-custom-profile`.
+Four ways in. None of them needs a build step. Pick one.
 
-Or quit the app and run:
+**1. From npm.** The package is published as `dsh-plugin-custom-profile`. In a terminal:
+
+```sh
+dsh plugin --profile desktop add dsh-plugin-custom-profile
+```
+
+The app's **Settings → Plugins → Install** search lists npm packages once the market index has picked them up. Installing by package name works now.
+
+**2. From GitHub.** No npm involved:
+
+```sh
+dsh plugin --profile desktop add github:JonyFang/dsh-plugin-custom-profile
+```
+
+**3. From a local checkout.** Clone this repository, then open **Settings → Plugins → Install → Local directory** in the app and select the directory. Or quit the app and run:
 
 ```sh
 dsh plugin --profile desktop add /absolute/path/to/dsh-plugin-custom-profile
 ```
 
-For another profile, use `dsh plugin --profile <profile> add dsh-plugin-custom-profile`, or `github:<your-account>/dsh-plugin-custom-profile`. Nothing to build.
-
-To install by hand, symlink this directory into the profile's `node_modules` and append this to `cordis.patch.yml`:
+**4. By hand.** Symlink this directory into the profile's `node_modules`, then append this to the profile's `cordis.patch.yml`:
 
 ```yaml
 - insert:
@@ -30,7 +42,7 @@ To install by hand, symlink this directory into the profile's `node_modules` and
       name: dsh-plugin-custom-profile
 ```
 
-Restart if **Profile** does not appear.
+`desktop` is the profile name, so change it for another profile. Restart the app if **Profile** does not appear.
 
 ## Use
 
