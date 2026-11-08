@@ -17,4 +17,4 @@ Keep these constraints:
 - Settings copy stays in the `TEXT` object. `locale/en.json` and `locale/zh.json` stay plugin-list metadata.
 - The host entry `lib/index.js` stays empty. The only `require` in `lib/client.js` stays `"react"`.
 
-Update the tests in `test/` for the markup you changed. Run `npm test`. Do not change `package.json` `version`, `dshCompat.verified`, `engines.dsh`, or the README client line. `bump-dsh-version` does that.
+Update the tests in `test/` for the markup you changed. Run `npm test`. When the number of tests changes, update the `npm test` count in both READMEs as well. Do not change `package.json` `version`, `dshCompat.verified`, `engines.dsh`, or the README client line. `bump-dsh-version` does that.

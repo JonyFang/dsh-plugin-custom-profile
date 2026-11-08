@@ -81,12 +81,22 @@ test("the verified client is the version the READMEs and CLAUDE.md name", () => 
   assert.match(read("CLAUDE.md"), new RegExp("written against client `" + packageJson.dshCompat.verified + "`"));
 });
 
-test("a version tag publishes the GitHub release", () => {
+test("a version tag publishes the GitHub release and the npm package", () => {
   const workflow = read(".github/workflows/release.yml");
   assert.match(workflow, /tags:\n\s+- "v\*"/);
   assert.match(workflow, /contents: write/);
+  assert.match(workflow, /npm test/);
+  assert.match(workflow, /does not match package\.json version/);
+  assert.match(workflow, /npm publish --tag latest/);
+  assert.match(workflow, /secrets\.NPM_TOKEN/);
   assert.match(workflow, /gh release create/);
   assert.match(workflow, /--prerelease/);
+});
+
+test("pull requests and the default branch run the test suite", () => {
+  const workflow = read(".github/workflows/ci.yml");
+  assert.match(workflow, /pull_request/);
+  assert.match(workflow, /npm test/);
 });
 
 test("the package ships the files its exports name", () => {
